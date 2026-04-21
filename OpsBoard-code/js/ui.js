@@ -43,6 +43,18 @@ const iaF = {grade:'all', task:'all', provider:'all', sort:'score', search:'', a
 /* ============================================================
    RENDU PAGE IA
    ============================================================ */
+   document.addEventListener("DOMContentLoaded", () => {
+    const badge = document.getElementById('webgpu-badge');
+    
+    if (navigator.gpu) {
+        badge.textContent = "✓ WebGPU Actif";
+        badge.style.color = "#00ff00"; // Vert matrix
+    } else {
+        badge.textContent = "✕ WebGPU Non supporté";
+        badge.style.color = "#ff4444"; // Rouge alert
+    }
+});
+
 function renderIA() {
   let ms = [...MODELS];
 
