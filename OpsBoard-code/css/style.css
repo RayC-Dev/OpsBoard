@@ -1,0 +1,16 @@
+/* ============================================================
+   style.css — Point d'entrée unique
+   Importe tous les modules CSS dans l'ordre correct.
+   Pour utiliser : <link rel="stylesheet" href="css/style.css">
+   ============================================================ */
+
+@import "01-reset-variables.css";
+@import "02-header-nav.css";
+@import "03-accueil.css";
+@import "04-outils.css";
+@import "05-systeme-monde.css";
+@import "06-ia-hwbar.css";
+@import "07-ia-filtres.css";
+@import "08-ia-modeles.css";
+@import "09-avenir.css";
+@import "10-utils.css";
