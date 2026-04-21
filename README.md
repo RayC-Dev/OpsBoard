@@ -1,4 +1,4 @@
-# OpsBoard [v.3.2.4] — by Dwizox
+# OpsBoard [v.3.2.4] — by RayC
 
 > **Votre centre de contrôle tout-en-un pour l'IA locale.**
 
@@ -6,7 +6,7 @@ OpsBoard est une plateforme modulaire conçue pour les utilisateurs avancés d'I
 
 ---
 
-## 🚀 Briques Fonctionnelles
+## Briques Fonctionnelles
 
 - **AI-Benchmark Engine:** Un moteur de benchmarking réimplémenté et optimisé pour évaluer instantanément la compatibilité de plus de 70 LLMs avec votre configuration matérielle.
 - **Live System Monitor:** Surveillance en temps réel des ressources critiques (CPU, RAM, VRAM, Bande Passante).
@@ -15,7 +15,7 @@ OpsBoard est une plateforme modulaire conçue pour les utilisateurs avancés d'I
 
 ---
 
-## 💡 Philosophie du Projet
+## Philosophie du Projet
 
 OpsBoard est né d'une réflexion sur l'expérience utilisateur des outils d'IA locale. 
 
@@ -29,7 +29,7 @@ Mon objectif avec ce projet est de démontrer ma capacité à :
 
 ---
 
-## 🛠️ Stack Technique
+## Stack Technique
 
 * **Front-end:** HTML5 / CSS3 (Dark Mode / Matrix-inspired UI)
 * **Logique:** JavaScript (API Navigateur, WebGPU, WebGL)
@@ -37,7 +37,7 @@ Mon objectif avec ce projet est de démontrer ma capacité à :
 
 ---
 
-## 📈 Roadmap
+## Roadmap
 
 - [x] Page IA & Benchmarking (Core)
 - [x] Gestionnaire d'outils (Favoris/Badges)
@@ -46,7 +46,7 @@ Mon objectif avec ce projet est de démontrer ma capacité à :
 
 ---
 
-## 📄 Licence
+## Licence
 Ce projet est sous licence **MIT**. 
 
 *OpsBoard est un projet personnel réalisé par Dwizox. Tous les noms de produits et marques mentionnés sont la propriété de leurs propriétaires respectifs.*
