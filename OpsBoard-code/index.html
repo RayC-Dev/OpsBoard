@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  	<link href="img\icon3.png" rel="icon">
+<link href="img\icon3.png" rel="icon">
   <title>OpsBoard</title>
   <link rel="stylesheet" href="css\style.css">
 </head>
@@ -15,15 +15,15 @@
 <header>
   <div class="header-inner">
     <div class="logo" onclick="navigate('accueil')">
-      <span class="logo-arrow">-</span>By RayC
-      <span class="logo-updated">ver 3.2.4</span>
+      <span class="logo-arrow">-</span>By Ray
+      <span class="logo-updated">ver 3.3.1</span>
     </div>
     <nav>
       <button class="nav-link" data-page="accueil"  onclick="navigate('accueil')">Accueil</button>
-      <button class="nav-link" data-page="outils"   onclick="navigate('outils')">Outils</button>
+	   <button class="nav-link" data-page="monde"    onclick="navigate('monde')">Monde</button>
 	        <button class="nav-link" data-page="ia"       onclick="navigate('ia')">IA</button>
+	 <button class="nav-link" data-page="outils"   onclick="navigate('outils')">Outils</button>
       <button class="nav-link" data-page="systeme"  onclick="navigate('systeme')">Système</button>
-      <button class="nav-link" data-page="monde"    onclick="navigate('monde')">Monde</button>
       <button class="nav-link" data-page="avenir"   onclick="navigate('avenir')">À venir</button>
     <!-- <button class="nav-icon">☀</button>-->
     </nav>
@@ -137,7 +137,7 @@
       <div class="monde-features">
         <span class="monde-feat">✈ Vols en direct</span>
         <span class="monde-feat">🌋 Catastrophes naturelles</span>
-        <span class="monde-feat">⚡ Conflits</span>
+        <span class="monde-feat">⚡ Conflits & manifestations</span>
         <span class="monde-feat">📈 Marchés financiers</span>
         <span class="monde-feat">🌊 Météo extrême</span>
         <span class="monde-feat">🛰 Globe 3D interactif</span>
@@ -153,7 +153,7 @@
 <div id="page-ia" class="page">
   <div class="main-wrap">
     <div class="ia-hero">
-      <h1>Test d'IA local</h1>
+      <h1>Teste d'IA locale</h1>
       <p>Découvrez quelles IA peuvent tourner sur votre ordinateur en local.</p>
     </div>
 
@@ -225,7 +225,7 @@
 
     </div><!-- fin .hw-bar -->
 
-    <div class="hw-note">
+<div class="hw-note">
   Configuration détectée via navigateur. Valeurs indicatives soumises aux restrictions système locales.
   <span id="webgpu-badge" class="webgpu-badge">Vérification WebGPU...</span>
 </div>
@@ -255,7 +255,7 @@
         <option value="all">Toutes les tâches</option>
         <option value="chat">Chat</option>
         <option value="code">Code</option>
-        <option value="reasoning">Raisonnement</option>
+        <option value="reasoning">Résonnement</option>
         <option value="vision">Vision</option>
         <option value="edge">Léger</option>
         <option value="multilingual">Multilingue</option>
@@ -338,7 +338,7 @@
         <div class="roadmap-item">
           <div class="roadmap-dot rd-plan"></div>
           <div><div class="roadmap-title">Globe mondial interactif</div>
-          <div class="roadmap-desc">Globe 3D en temps réel : vols en direct, catastrophes naturelles, conflits, marchés financiers. Navigation interactive à la souris / tactile.</div>
+          <div class="roadmap-desc">Globe 3D en temps réel : vols en direct, catastrophes naturelles, conflits, manifestations, marchés financiers. Navigation interactive à la souris / tactile.</div>
           <span class="roadmap-tag rtag-plan">Planifié</span></div>
         </div>
 
@@ -359,6 +359,7 @@
 <script src="js\icons.js"></script>
 <script src="js\data.js"></script>
 <script src="js\logic.js"></script>
+<script src="js\monde.js"></script>
 <script src="js\ui.js"></script>
 <script>
   /* Mise à jour de la page système après init du hw */
