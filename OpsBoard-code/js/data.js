@@ -150,7 +150,7 @@ const GPU_LIST = [
             tasks (filtrable : chat/code/reasoning/vision/edge/multilingual),
             abliterated (bool), arch, released, age
    ============================================================ */
-const MODELS = [
+const MODELS_BASE = [
   /* ── Ultra-légers ──────────────────────────────────────── */
   {name:'Qwen 3 0.6B',            provider:'Alibaba',    params:0.6,  vram:0.8,  ctx:'32K',   lic:'apache', licLabel:'Apache 2.0',          caps:['reasoning','edge'],               tasks:['chat','edge'],              abliterated:false, arch:'Dense', released:'2025-04', age:'1 year ago'},
   {name:'Qwen 3.5 0.8B',          provider:'Alibaba',    params:0.8,  vram:0.9,  ctx:'32K',   lic:'apache', licLabel:'Apache 2.0',          caps:['reasoning','edge'],               tasks:['chat','edge'],              abliterated:false, arch:'Dense', released:'2026-02', age:'2mo ago'},
@@ -230,3 +230,80 @@ const MODELS = [
   {name:'DeepSeek V3.2',          provider:'DeepSeek',   params:685,  vram:351.4,ctx:'128K',  lic:'mit',    licLabel:'MIT',                 caps:['moe','chat','star','code'],tasks:['chat','code','reasoning'],  abliterated:false, arch:'MoE',   released:'2025-12', age:'4mo ago'},
   {name:'Kimi K2',                provider:'Moonshot AI',params:1000, vram:512.7,ctx:'128K',  lic:'kimi',   licLabel:'Kimi',                caps:['moe','chat','star','code'],tasks:['chat','reasoning','code'],  abliterated:false, arch:'MoE',   released:'2025-07', age:'9mo ago'},
 ];
+
+const MODEL_EXCLUSIONS = new Set([
+  'Qwen 3.5 0.8B',
+  'Qwen 3.5 2B',
+  'Qwen 3.5 4B',
+  'Qwen 3.5 9B',
+  'Qwen 3.5 27B',
+  'LFM2 24B',
+]);
+
+const MODEL_PATCHES = {
+  'DeepSeek R1 1.5B': { name:'DeepSeek R1 Distill 1.5B' },
+  'DeepSeek R1 Distill 14B': { name:'DeepSeek R1 Distill Qwen 14B' },
+  'DeepSeek R1 Distill 32B': { name:'DeepSeek R1 Distill Qwen 32B' },
+  'DeepSeek R1 14B Abliterated': { name:'DeepSeek R1 Distill 14B Abliterated' },
+  'DeepSeek R1 32B Abliterated': { name:'DeepSeek R1 Distill 32B Abliterated' },
+  'DeepSeek V3.2': { name:'DeepSeek V3', params:671, vram:344.2, released:'2024-12' },
+  'Devstral 2 123B': { params:125, lic:'mit', licLabel:'Modified MIT' },
+  'Gemma 4 E2B': { ctx:'128K', lic:'apache', licLabel:'Apache 2.0' },
+  'Gemma 4 E2B IT': { ctx:'128K', lic:'apache', licLabel:'Apache 2.0' },
+  'Gemma 4 E4B': { ctx:'128K', lic:'apache', licLabel:'Apache 2.0' },
+  'Gemma 4 E4B IT': { ctx:'128K', lic:'apache', licLabel:'Apache 2.0' },
+  'Gemma 4 26B-A4B IT': { name:'Gemma 4 26B A4B IT', lic:'apache', licLabel:'Apache 2.0' },
+  'Gemma 4 31B IT': { lic:'apache', licLabel:'Apache 2.0' },
+  'Llama 3.2 11B Vision': { name:'Llama 3.2 11B Vision Instruct' },
+  'Llama 4 Scout 17B': { name:'Llama 4 Scout 17B-16E', ctx:'10M' },
+  'Phi-4 Mini Reasoning': { name:'Phi-4 Mini Reasoning', ctx:'128K' },
+};
+
+const EXTRA_MODELS = [
+  {name:'Gemma 3 270M',                 provider:'Google',     params:0.27, vram:0.5,   ctx:'32K',   lic:'gemma',  licLabel:'Gemma',          caps:['edge'],                         tasks:['chat','edge'],                     abliterated:false, arch:'Dense', released:'2025-03'},
+  {name:'Qwen 2.5 0.5B',                provider:'Alibaba',    params:0.5,  vram:0.7,   ctx:'128K',  lic:'apache', licLabel:'Apache 2.0',     caps:['chat','edge','multi'],           tasks:['chat','edge','multilingual'],      abliterated:false, arch:'Dense', released:'2024-09'},
+  {name:'Qwen 2.5 3B',                  provider:'Alibaba',    params:3,    vram:2.0,   ctx:'128K',  lic:'qwen',   licLabel:'Qwen',           caps:['chat','multi'],                  tasks:['chat','multilingual'],             abliterated:false, arch:'Dense', released:'2024-09'},
+  {name:'Qwen 2.5 Math 1.5B',           provider:'Alibaba',    params:1.5,  vram:1.3,   ctx:'32K',   lic:'apache', licLabel:'Apache 2.0',     caps:['reasoning','edge'],              tasks:['reasoning','edge'],                abliterated:false, arch:'Dense', released:'2024-09'},
+  {name:'Qwen 2.5 Math 7B',             provider:'Alibaba',    params:7,    vram:4.1,   ctx:'32K',   lic:'apache', licLabel:'Apache 2.0',     caps:['reasoning'],                     tasks:['reasoning'],                       abliterated:false, arch:'Dense', released:'2024-09'},
+  {name:'Qwen 2.5 VL 3B',               provider:'Alibaba',    params:3,    vram:2.0,   ctx:'128K',  lic:'qwen',   licLabel:'Qwen',           caps:['chat','vision'],                 tasks:['chat','vision'],                   abliterated:false, arch:'Dense', released:'2025-01'},
+  {name:'Phi-4 Mini Instruct',          provider:'Microsoft',  params:3.8,  vram:2.4,   ctx:'128K',  lic:'mit',    licLabel:'MIT',            caps:['chat','code','edge'],            tasks:['chat','code','edge'],              abliterated:false, arch:'Dense', released:'2025-02'},
+  {name:'Command R7B',                  provider:'Cohere',     params:7,    vram:4.1,   ctx:'128K',  lic:'cc',     licLabel:'CC BY-NC 4.0',   caps:['chat','code','multi'],           tasks:['chat','code','multilingual'],      abliterated:false, arch:'Dense', released:'2024-12'},
+  {name:'Aya Expanse 8B',               provider:'Cohere',     params:8,    vram:4.6,   ctx:'8K',    lic:'cc',     licLabel:'CC BY-NC 4.0',   caps:['chat','multi'],                  tasks:['chat','multilingual'],             abliterated:false, arch:'Dense', released:'2024-12'},
+  {name:'DeepSeek R1 Distill 8B',       provider:'DeepSeek',   params:8,    vram:4.6,   ctx:'32K',   lic:'mit',    licLabel:'MIT',            caps:['reasoning'],                     tasks:['reasoning'],                       abliterated:false, arch:'Dense', released:'2025-01'},
+  {name:'Qwen 2.5 VL 7B',               provider:'Alibaba',    params:7,    vram:4.1,   ctx:'128K',  lic:'qwen',   licLabel:'Qwen',           caps:['chat','vision'],                 tasks:['chat','vision'],                   abliterated:false, arch:'Dense', released:'2025-01'},
+  {name:'Phi-4 Reasoning',              provider:'Microsoft',  params:14,   vram:7.7,   ctx:'32K',   lic:'mit',    licLabel:'MIT',            caps:['reasoning','code','star'],       tasks:['reasoning','code'],                abliterated:false, arch:'Dense', released:'2025-04-30'},
+  {name:'Phi-4 Reasoning Plus',         provider:'Microsoft',  params:14,   vram:7.7,   ctx:'32K',   lic:'mit',    licLabel:'MIT',            caps:['reasoning','code','star'],       tasks:['reasoning','code'],                abliterated:false, arch:'Dense', released:'2025-04-30'},
+  {name:'Phi-4 Reasoning Vision 15B',   provider:'Microsoft',  params:15,   vram:8.2,   ctx:'16K',   lic:'mit',    licLabel:'MIT',            caps:['reasoning','vision','code'],     tasks:['reasoning','vision','code'],       abliterated:false, arch:'Dense', released:'2026-03-04'},
+  {name:'Qwen 2.5 Math 72B',            provider:'Alibaba',    params:72,   vram:37.4,  ctx:'32K',   lic:'qwen',   licLabel:'Qwen',           caps:['reasoning','star'],              tasks:['reasoning'],                       abliterated:false, arch:'Dense', released:'2024-09'},
+  {name:'Codestral 22B',                provider:'Mistral AI', params:22,   vram:11.8,  ctx:'32K',   lic:'mrl',    licLabel:'MNPL-0.1',       caps:['code','star'],                   tasks:['code'],                            abliterated:false, arch:'Dense', released:'2024-05'},
+  {name:'QwQ 32B',                      provider:'Alibaba',    params:32.5, vram:17.1,  ctx:'128K',  lic:'apache', licLabel:'Apache 2.0',     caps:['reasoning','code','star'],       tasks:['reasoning','code'],                abliterated:false, arch:'Dense', released:'2025-03-06'},
+  {name:'Aya Expanse 32B',              provider:'Cohere',     params:32,   vram:16.9,  ctx:'128K',  lic:'cc',     licLabel:'CC BY-NC 4.0',   caps:['chat','multi'],                  tasks:['chat','multilingual'],             abliterated:false, arch:'Dense', released:'2024-12'},
+  {name:'Llama 3.2 90B Vision Instruct',provider:'Meta',       params:90,   vram:46.6,  ctx:'128K',  lic:'llama',  licLabel:'Llama 3.2 Community', caps:['chat','vision','star'],      tasks:['chat','vision','reasoning'],       abliterated:false, arch:'Dense', released:'2024-09-25'},
+  {name:'Command A',                    provider:'Cohere',     params:111,  vram:57.3,  ctx:'256K',  lic:'cc',     licLabel:'CC BY-NC 4.0',   caps:['chat','code','multi','star'],    tasks:['chat','code','multilingual'],      abliterated:false, arch:'Dense', released:'2025-03-13'},
+  {name:'Qwen 2.5 VL 72B',              provider:'Alibaba',    params:72,   vram:37.4,  ctx:'128K',  lic:'qwen',   licLabel:'Qwen',           caps:['chat','vision','star'],          tasks:['chat','vision','reasoning'],       abliterated:false, arch:'Dense', released:'2025-01'},
+  {name:'Llama 4 Maverick 17B-128E',    provider:'Meta',       params:400,  vram:205.3, ctx:'1M',    lic:'llama',  licLabel:'Llama 4 Community',  caps:['moe','chat','vision','star','code'], tasks:['chat','vision','reasoning','code'], abliterated:false, arch:'MoE',   released:'2025-04-05'},
+  {name:'Mistral Small 4 119B A6B',     provider:'Mistral AI', params:119,  vram:61.4,  ctx:'256K',  lic:'apache', licLabel:'Apache 2.0',     caps:['moe','chat','vision','star','code'], tasks:['chat','vision','reasoning','code'], abliterated:false, arch:'MoE', released:'2026-03-16'},
+  {name:'DeepSeek R1 Distill 70B',      provider:'DeepSeek',   params:70,   vram:36.4,  ctx:'32K',   lic:'mit',    licLabel:'MIT',            caps:['reasoning','star'],              tasks:['reasoning'],                       abliterated:false, arch:'Dense', released:'2025-01'},
+  {name:'DeepSeek R1-0528',             provider:'DeepSeek',   params:671,  vram:344.2, ctx:'128K',  lic:'mit',    licLabel:'MIT',            caps:['moe','reasoning','star','code'], tasks:['reasoning','code'],                abliterated:false, arch:'MoE',   released:'2025-05-28'},
+];
+
+function patchModel(model) {
+  const patch = MODEL_PATCHES[model.name];
+  return patch ? { ...model, ...patch } : model;
+}
+
+function uniq(list) {
+  return [...new Set((list || []).filter(Boolean))];
+}
+
+function normalizeModel(model) {
+  return {
+    ...model,
+    caps: uniq(model.caps),
+    tasks: uniq(model.tasks),
+    arch: model.arch || 'Dense',
+    released: model.released || '',
+  };
+}
+
+const MODELS = [...MODELS_BASE.filter(m => !MODEL_EXCLUSIONS.has(m.name)).map(patchModel), ...EXTRA_MODELS].map(normalizeModel);
