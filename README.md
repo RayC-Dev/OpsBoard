@@ -2,7 +2,7 @@
 
 > **Votre centre de contrôle tout-en-un pour l'IA locale.**
 
-OpsBoard est une plateforme de monitoring en temps réel intégrant des flux de données géospatiales à l'échelle mondiale. Ce projet centralise un module de diagnostic pour tester la compatibilité des IA locales, le benchmarking matériel, le monitoring système en temps réel et la veille technologique au sein d'un dashboard unique.
+OpsBoard est une plateforme de monitoring en temps réel intégrant des flux de données géospatiales à l'échelle mondiale. Ce projet centralise aussi un module de diagnostic pour tester la compatibilité des IA locales, gestionnaire d'outils, le monitoring système en temps réel et la veille technologique au sein d'un dashboard unique.
 
 ---
 
@@ -10,7 +10,7 @@ OpsBoard est une plateforme de monitoring en temps réel intégrant des flux de 
 
 - **AI-Benchmark Engine:** Un moteur de benchmarking réimplémenté et optimisé pour évaluer instantanément la compatibilité de plus de 70 LLMs avec votre configuration matérielle.
 - **Live System Monitor:** Surveillance en temps réel des ressources critiques (CPU, RAM, VRAM, Bande Passante).
-- **World Telemetry (Work in Progress):** Un globe interactif 3D futur pour suivre les flux d'informations mondiaux en direct.
+- **World Telemetry:** Un globe interactif 3D pour suivre les flux d'informations mondiaux en direct.
 - **Project Roadmap:** Gestion transparente de l'évolution des fonctionnalités.
 
 ---
@@ -20,7 +20,7 @@ OpsBoard est une plateforme de monitoring en temps réel intégrant des flux de 
 OpsBoard est né d'une réflexion sur l'expérience utilisateur des outils d'IA locale. 
 
 **Note sur la conception :**
-Bien que le moteur de benchmarking soit inspiré par des concepts UX éprouvés (comme CanIRun.ai), **OpsBoard n'est pas une simple copie**. Il s'agit d'une réimplémentation complète intégrée dans une architecture globale. Ma valeur ajoutée réside dans l'unification de ces outils disparates (Benchmark + Monitoring + Roadmap + Veille) au sein d'une interface unique et cohérente.
+Bien que le moteur de benchmarking soit inspiré par des concepts UX éprouvés (comme CanIRun.ai), **OpsBoard n'est pas une simple copie**. Il s'agit d'une réimplémentation complète intégrée dans une architecture globale. Ma valeur ajoutée réside dans l'unification de ces outils disparates (flux d'informations mondiaux + Benchmark + Monitoring + Roadmap + Veille) au sein d'une interface unique et cohérente.
 
 Mon objectif avec ce projet est de démontrer ma capacité à :
 1. Analyser et refactoriser des patterns existants.
