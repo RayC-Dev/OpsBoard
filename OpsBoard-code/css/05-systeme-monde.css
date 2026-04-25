@@ -68,6 +68,9 @@
   padding: 26px 0 6px;
 }
 .monde-head { margin-bottom: 16px; }
+.monde-dev-badge {
+  margin-top: 10px;
+}
 .monde-source-note {
   padding: 9px 12px;
   border: 1px solid rgba(0,212,106,0.2);
