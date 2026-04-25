@@ -44,7 +44,7 @@ const iaF = {grade:'all', task:'all', provider:'all', sort:'score', search:'', a
 /* ============================================================
    RENDU PAGE IA
    ============================================================ */
-   document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const badge = document.getElementById('webgpu-badge');
     
     if (navigator.gpu) {
@@ -55,6 +55,27 @@ const iaF = {grade:'all', task:'all', provider:'all', sort:'score', search:'', a
         badge.style.color = "#ff4444"; // Rouge alert
     }
 });
+
+function modelAgeLabel(released) {
+  if (!released) return '-';
+  const iso = /^\d{4}-\d{2}$/.test(released) ? `${released}-01T00:00:00` : `${released}T00:00:00`;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '-';
+
+  const now = new Date();
+  let months = (now.getFullYear() - date.getFullYear()) * 12 + (now.getMonth() - date.getMonth());
+  if (now.getDate() < date.getDate()) months -= 1;
+  months = Math.max(0, months);
+
+  if (months < 1) {
+    const days = Math.max(1, Math.floor((now - date) / 86400000));
+    return days + ' j';
+  }
+  if (months < 12) return months + ' mo';
+
+  const years = Math.floor(months / 12);
+  return years + ' an' + (years > 1 ? 's' : '');
+}
 
 function renderIA() {
   let ms = [...MODELS];
@@ -114,12 +135,13 @@ function renderIA() {
     const capHtml = m.caps.map(capBadge).join('');
     const ablHtml = abliteratedBadge(m.abliterated);
     const licHtml = licBadge(m.lic, m.licLabel);
+    const ageLabel = modelAgeLabel(m.released);
     return `<div class="model-row" style="animation-delay:${Math.min(i,40)*12}ms">
       <div class="model-left">
         <span class="model-name">${m.name}</span>
         <div class="model-badges">${capHtml}${ablHtml}${licHtml}</div>
       </div>
-      <div class="model-age">${m.age}</div>
+      <div class="model-age">${ageLabel}</div>
       <div class="model-vram"><span class="model-vram-gb">${m.vram} GB</span><span class="vram-pct ${gm.vp}">${pctLabel}</span></div>
       <div class="model-ctx">${m.ctx} ctx</div>
       <div class="model-speed ${sp.c}">${sp.t}</div>
