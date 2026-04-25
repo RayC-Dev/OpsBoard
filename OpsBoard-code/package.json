@@ -1,0 +1,7 @@
+{
+  "name": "dashboard-monde-v7",
+  "private": true,
+  "dependencies": {
+    "adm-zip": "^0.5.16"
+  }
+}
