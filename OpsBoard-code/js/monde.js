@@ -260,7 +260,7 @@ function ensureMondePage() {
         <div>
           <div class="page-title">Monde</div>
           <div class="page-sub">Surveillance temps reel. Le globe n'affiche que des sources reelles chargees a la demande.</div>
-           <div class="coming-soon-badge monde-dev-badge">⚙ En développement — vols, conflits et manifestations encore limités selon les sources</div>
+           <div class="coming-soon-badge monde-dev-badge">⚙ En développement — vols encore limités selon les sources</div>
         </div>
         <div class="monde-source-note" id="monde-last-sync">Sources en attente</div>
       </div>
