@@ -1,4 +1,4 @@
-# OpsBoard [v.3.4.0] — by RayC
+# OpsBoard [v.3.4.1] — by RayC
 
 > **Votre centre de contrôle tout-en-un pour l'IA locale.**
 
