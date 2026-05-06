@@ -1,6 +1,12 @@
-const AdmZip = require("adm-zip");
-
 const CACHE = globalThis.__MONDE_CACHE || (globalThis.__MONDE_CACHE = new Map());
+
+function readZipText(buffer) {
+  const AdmZip = require("adm-zip");
+  const zip = new AdmZip(buffer);
+  const entries = zip.getEntries();
+  if (!entries.length) return "";
+  return entries[0].getData().toString("utf8");
+}
 
 function sendJson(res, data, statusCode = 200) {
   res.statusCode = statusCode;
@@ -22,6 +28,18 @@ async function fetchJson(url, timeoutMs = 30000) {
     throw new Error("HTTP " + res.status + " for " + url);
   }
   return res.json();
+}
+
+async function fetchText(url, options = {}, timeoutMs = 30000) {
+  const res = await fetch(url, {
+    ...options,
+    cache: "no-store",
+    signal: AbortSignal.timeout(timeoutMs)
+  });
+  if (!res.ok) {
+    throw new Error("HTTP " + res.status + " for " + url);
+  }
+  return res.text();
 }
 
 async function fetchBuffer(url, timeoutMs = 45000) {
@@ -130,8 +148,85 @@ async function getOpenSkyStates() {
   const cacheKey = "opensky-states";
   const cached = getCached(cacheKey);
   if (cached) return cached;
-  const data = await fetchJson("https://opensky-network.org/api/states/all", 35000);
-  return setCached(cacheKey, data, 60 * 1000);
+
+  const clientId = process.env.OPENSKY_CLIENT_ID;
+  const clientSecret = process.env.OPENSKY_CLIENT_SECRET;
+  let headers = {
+    Accept: "application/json",
+    "User-Agent": "MondeDashboard/1.0"
+  };
+
+  if (clientId && clientSecret) {
+    const tokenCacheKey = "opensky-token";
+    let token = getCached(tokenCacheKey);
+    if (!token) {
+      const body = new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: clientId,
+        client_secret: clientSecret
+      });
+      const tokenText = await fetchText(
+        "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Accept: "application/json"
+          },
+          body
+        },
+        20000
+      );
+      const tokenJson = JSON.parse(tokenText);
+      token = tokenJson.access_token;
+      if (token) {
+        const ttl = Math.max(60, (Number(tokenJson.expires_in) || 300) - 30) * 1000;
+        setCached(tokenCacheKey, token, ttl);
+      }
+    }
+
+    if (token) {
+      headers = {
+        ...headers,
+        Authorization: "Bearer " + token
+      };
+    }
+  }
+
+  const target = "https://opensky-network.org/api/states/all";
+  const attempts = [
+    async () => {
+      const res = await fetch(target, {
+        headers,
+        cache: "no-store",
+        signal: AbortSignal.timeout(35000)
+      });
+      if (!res.ok) {
+        throw new Error("HTTP " + res.status + " for " + target);
+      }
+      return res.json();
+    },
+    async () => fetchJson("https://api.allorigins.win/raw?url=" + encodeURIComponent(target), 35000),
+    async () => {
+      const wrapper = await fetchJson("https://api.allorigins.win/get?url=" + encodeURIComponent(target), 35000);
+      if (!wrapper?.contents) throw new Error("AllOrigins n'a renvoye aucun contenu");
+      return JSON.parse(wrapper.contents);
+    }
+  ];
+
+  let lastError = null;
+  for (const attempt of attempts) {
+    try {
+      const data = await attempt();
+      if (data && Array.isArray(data.states)) {
+        return setCached(cacheKey, data, 60 * 1000);
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("OpenSky indisponible");
 }
 
 async function getGdeltEventFeed(type, limit) {
@@ -156,10 +251,8 @@ async function getGdeltEventFeed(type, limit) {
 
     let text = "";
     try {
-      const zip = new AdmZip(buffer);
-      const entries = zip.getEntries();
-      if (!entries.length) continue;
-      text = entries[0].getData().toString("utf8");
+      text = readZipText(buffer);
+      if (!text) continue;
     } catch {
       continue;
     }
