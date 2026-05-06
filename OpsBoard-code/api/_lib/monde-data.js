@@ -75,6 +75,13 @@ function setCached(key, data, ttlMs) {
   return data;
 }
 
+const OPENSKY_BOXES = [
+  { name: "ameriques", lamin: -60, lomin: -170, lamax: 75, lomax: -25 },
+  { name: "europe_afrique", lamin: -40, lomin: -25, lamax: 72, lomax: 60 },
+  { name: "asie", lamin: -5, lomin: 60, lamax: 75, lomax: 150 },
+  { name: "oceanie", lamin: -50, lomin: 110, lamax: 10, lomax: 180 }
+];
+
 function getIntValue(value) {
   const n = parseInt(String(value || ""), 10);
   return Number.isFinite(n) ? n : 0;
@@ -193,24 +200,70 @@ async function getOpenSkyStates() {
     }
   }
 
+  async function fetchOpenSkyPayload(target) {
+    const attempts = [
+      async () => {
+        const res = await fetch(target, {
+          headers,
+          cache: "no-store",
+          signal: AbortSignal.timeout(25000)
+        });
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status + " for " + target);
+        }
+        return res.json();
+      },
+      async () => fetchJson("https://api.allorigins.win/raw?url=" + encodeURIComponent(target), 25000),
+      async () => {
+        const wrapper = await fetchJson("https://api.allorigins.win/get?url=" + encodeURIComponent(target), 25000);
+        if (!wrapper?.contents) throw new Error("AllOrigins n'a renvoye aucun contenu");
+        return JSON.parse(wrapper.contents);
+      }
+    ];
+
+    let lastError = null;
+    for (const attempt of attempts) {
+      try {
+        const data = await attempt();
+        if (data && Array.isArray(data.states)) return data;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw lastError || new Error("OpenSky indisponible");
+  }
+
   const target = "https://opensky-network.org/api/states/all";
   const attempts = [
+    async () => fetchOpenSkyPayload(target),
     async () => {
-      const res = await fetch(target, {
-        headers,
-        cache: "no-store",
-        signal: AbortSignal.timeout(35000)
+      const settled = await Promise.allSettled(
+        OPENSKY_BOXES.map((box) => {
+          const query = new URLSearchParams({
+            lamin: String(box.lamin),
+            lomin: String(box.lomin),
+            lamax: String(box.lamax),
+            lomax: String(box.lomax)
+          });
+          return fetchOpenSkyPayload(target + "?" + query.toString());
+        })
+      );
+
+      const byIcao = new Map();
+      settled.forEach((result) => {
+        if (result.status !== "fulfilled") return;
+        const states = Array.isArray(result.value?.states) ? result.value.states : [];
+        states.forEach((state) => {
+          const icao = state?.[0] || Math.random().toString(36).slice(2);
+          const prev = byIcao.get(icao);
+          if (!prev || (state?.[4] || 0) > (prev?.[4] || 0)) {
+            byIcao.set(icao, state);
+          }
+        });
       });
-      if (!res.ok) {
-        throw new Error("HTTP " + res.status + " for " + target);
-      }
-      return res.json();
-    },
-    async () => fetchJson("https://api.allorigins.win/raw?url=" + encodeURIComponent(target), 35000),
-    async () => {
-      const wrapper = await fetchJson("https://api.allorigins.win/get?url=" + encodeURIComponent(target), 35000);
-      if (!wrapper?.contents) throw new Error("AllOrigins n'a renvoye aucun contenu");
-      return JSON.parse(wrapper.contents);
+
+      if (!byIcao.size) throw new Error("Aucune zone OpenSky n'a repondu");
+      return { time: Math.floor(Date.now() / 1000), states: [...byIcao.values()] };
     }
   ];
 
