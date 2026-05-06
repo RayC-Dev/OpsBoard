@@ -46,6 +46,16 @@ const MONDE_COLORS = {
   protests: "#c084fc"
 };
 
+const MONDE_LIMITS = {
+  flights: 120,
+  earthquakes: 20,
+  disasters: 20,
+  weather: 20,
+  conflicts: 20,
+  protests: 12,
+  recentFeed: 8
+};
+
 const MONDE_CONTINENTS = [
   {
     name: "Amerique du Nord",
@@ -505,8 +515,8 @@ async function loadMondeData(force) {
     fetchUSGSEarthquakes(),
     fetchEONETVolcanoes(),
     fetchEONETWeatherEvents(),
-    fetchGDELTGeoEvents("(clashes OR shelling OR fighting OR airstrike OR offensive)", 20, "conflicts", "Base evenement GDELT"),
-    fetchGDELTGeoEvents("(protest OR protests OR demonstration OR rally OR unrest)", 12, "protests", "Base evenement GDELT")
+    fetchGDELTGeoEvents("(clashes OR shelling OR fighting OR airstrike OR offensive)", MONDE_LIMITS.conflicts, "conflicts", "Base evenement GDELT"),
+    fetchGDELTGeoEvents("(protest OR protests OR demonstration OR rally OR unrest)", MONDE_LIMITS.protests, "protests", "Base evenement GDELT")
   ]);
 
   if (flights.status === "fulfilled") {
@@ -648,6 +658,13 @@ const MONDE_PROXIES = [
   u => "https://thingproxy.freeboard.io/fetch/" + u,
 ];
 
+const OPENSKY_BOXES = [
+  { lamin: -60, lomin: -170, lamax: 75, lomax: -25 },
+  { lamin: -40, lomin: -25, lamax: 72, lomax: 60 },
+  { lamin: -5, lomin: 60, lamax: 75, lomax: 150 },
+  { lamin: -50, lomin: 110, lamax: 10, lomax: 180 }
+];
+
 async function fetchJSONViaProxy(url) {
   for (const makeProxy of MONDE_PROXIES) {
     try {
@@ -682,17 +699,53 @@ async function fetchJSONViaAllorigins(url) {
   return fetchJSONViaProxy(url);
 }
 
+function mergeOpenSkyStates(payloads) {
+  const byIcao = new Map();
+  payloads.forEach(json => {
+    const states = Array.isArray(json?.states) ? json.states : [];
+    states.forEach(state => {
+      const icao = state?.[0] || Math.random().toString(36).slice(2);
+      const prev = byIcao.get(icao);
+      if (!prev || (state?.[4] || 0) > (prev?.[4] || 0)) byIcao.set(icao, state);
+    });
+  });
+  return { time: Math.floor(Date.now() / 1000), states: [...byIcao.values()] };
+}
+
+async function fetchOpenSkyBrowserStates() {
+  const target = "https://opensky-network.org/api/states/all";
+  try {
+    return await fetchJSONViaAllorigins(target);
+  } catch (e) {}
+
+  const settled = await Promise.allSettled(
+    OPENSKY_BOXES.map(box => {
+      const query = new URLSearchParams({
+        lamin: String(box.lamin),
+        lomin: String(box.lomin),
+        lamax: String(box.lamax),
+        lomax: String(box.lomax)
+      });
+      return fetchJSONViaAllorigins(target + "?" + query.toString());
+    })
+  );
+
+  const payloads = settled.filter(r => r.status === "fulfilled").map(r => r.value);
+  if (!payloads.length) throw new Error("OpenSky indisponible dans toutes les zones");
+  return mergeOpenSkyStates(payloads);
+}
+
 async function fetchOpenSkyFlights() {
   // OpenSky blocks direct browser requests — use allorigins /get wrapper (best for large JSON)
   const json = await fetchJSONViaLocalRelay(
     "/api/opensky/states",
-    () => fetchJSONViaAllorigins("https://opensky-network.org/api/states/all")
+    () => fetchOpenSkyBrowserStates()
   );
   const states = Array.isArray(json.states) ? json.states : [];
   return states
     .filter(s => s && typeof s[5] === "number" && typeof s[6] === "number" && s[8] === false)
     .filter(s => (s[9] || 0) > 55)
-    .slice(0, 120)
+    .slice(0, MONDE_LIMITS.flights)
     .map((s, index) => ({
       id: "flight-" + index + "-" + (s[0] || "x"),
       type: "flights",
@@ -727,7 +780,7 @@ async function fetchUSGSEarthquakes() {
       source: "Reseau sismique mondial"
     }))
     .sort((a, b) => (b.mag || 0) - (a.mag || 0) || (b.ts || 0) - (a.ts || 0))
-    .slice(0, 20);
+    .slice(0, MONDE_LIMITS.earthquakes);
 }
 
 async function fetchEONETByCategory(categoryNames, maxCount, type, sourceLabel, options = {}) {
@@ -781,11 +834,11 @@ async function fetchEONETByCategory(categoryNames, maxCount, type, sourceLabel, 
 }
 
 async function fetchEONETVolcanoes() {
-  return fetchEONETByCategory(["Volcanoes", "Wildfires"], 20, "disasters", "Observation naturelle mondiale", { status: "all", days: 90 });
+  return fetchEONETByCategory(["Volcanoes", "Wildfires"], MONDE_LIMITS.disasters, "disasters", "Observation naturelle mondiale", { status: "all", days: 90 });
 }
 
 async function fetchEONETWeatherEvents() {
-  return fetchEONETByCategory(["Severe Storms", "Dust and Haze"], 20, "weather", "Veille meteo mondiale", { status: "all", days: 120 });
+  return fetchEONETByCategory(["Severe Storms", "Dust and Haze"], MONDE_LIMITS.weather, "weather", "Veille meteo mondiale", { status: "all", days: 120 });
 }
 
 async function fetchGDELTGeoEvents(query, maxCount, type, sourceLabel) {
@@ -1095,7 +1148,7 @@ function renderMondeFeed() {
   if (!feed) return;
   const items = activeMondeItems()
     .sort((a, b) => (b.ts || 0) - (a.ts || 0))
-    .slice(0, 8);
+    .slice(0, MONDE_LIMITS.recentFeed);
 
   const sourceAlerts = Object.entries(MONDE.sources)
     .filter(([, source]) => source.status === "error")
