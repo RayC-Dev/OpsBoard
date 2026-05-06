@@ -48,11 +48,11 @@ const MONDE_COLORS = {
 
 const MONDE_LIMITS = {
   flights: 120,
-  earthquakes: 20,
-  disasters: 20,
-  weather: 20,
+  earthquakes: 30,
+  disasters: 25,
+  weather: 30,
   conflicts: 20,
-  protests: 12,
+  protests: 20,
   recentFeed: 8
 };
 
