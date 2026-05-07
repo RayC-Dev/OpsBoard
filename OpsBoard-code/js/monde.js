@@ -48,9 +48,9 @@ const MONDE_COLORS = {
 
 const MONDE_LIMITS = {
   flights: 120,
-  earthquakes: 20,
+  earthquakes: 30,
   disasters: 20,
-  weather: 20,
+  weather: 25,
   conflicts: 20,
   protests: 12,
   recentFeed: 8
