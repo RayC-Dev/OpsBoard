@@ -48,9 +48,9 @@ const MONDE_COLORS = {
 
 const MONDE_LIMITS = {
   flights: 120,
-  earthquakes: 30,
-  disasters: 20,
-  weather: 25,
+  earthquakes: 40,
+  disasters: 35,
+  weather: 42,
   conflicts: 20,
   protests: 12,
   recentFeed: 8
@@ -523,7 +523,7 @@ async function loadMondeData(force) {
     MONDE.data.flights = flights.value;
     setMondeSource("flights", {
       status: "ok",
-      message: flights.value.length ? flights.value.length + " vols visibles" : "0 vol remonte par le flux",
+      message: flights.value.length ? flights.value.length + " vols visibles" : "Aucun événement confirmé remonté par la source",
       updatedAt: new Date()
     });
   } else {
@@ -573,7 +573,7 @@ async function loadMondeData(force) {
     MONDE.data.conflicts = conflicts.value;
     setMondeSource("conflicts", {
       status: "ok",
-      message: conflicts.value.length ? conflicts.value.length + " points geographiques" : "0 conflit remonte par le flux",
+      message: conflicts.value.length ? conflicts.value.length + " points geographiques" : "Aucun événement confirmé remonté par la source",
       updatedAt: new Date()
     });
   } else {
@@ -589,7 +589,7 @@ async function loadMondeData(force) {
     MONDE.data.protests = protests.value;
     setMondeSource("protests", {
       status: "ok",
-      message: protests.value.length ? protests.value.length + " points geographiques" : "0 manifestation remontee par le flux",
+      message: protests.value.length ? protests.value.length + " points geographiques" : "Aucun événement confirmé remonté par la source",
       updatedAt: new Date()
     });
   } else {
