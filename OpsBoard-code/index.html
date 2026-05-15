@@ -16,7 +16,7 @@
   <div class="header-inner">
     <div class="logo" onclick="navigate('accueil')">
       <span class="logo-arrow">-</span>By Ray
-      <span class="logo-updated">ver 3.4.3</span>
+      <span class="logo-updated">ver 3.4.4</span>
     </div>
     <nav>
       <button class="nav-link" data-page="accueil"  onclick="navigate('accueil')">Accueil</button>
@@ -81,14 +81,13 @@
       </div>
       <div class="badge-selector-label">Badges — cliquez pour sélectionner</div>
       <div class="badge-options">
-        <button class="badge-option" onclick="toggleBadge('green',this)">🟢 IA</button>
-        <button class="badge-option" onclick="toggleBadge('blue',this)">🔵 API</button>
-        <button class="badge-option" onclick="toggleBadge('purple',this)">🟣 LLM</button>
-        <button class="badge-option" onclick="toggleBadge('yellow',this)">🟡 Outil</button>
-        <button class="badge-option" onclick="toggleBadge('red',this)">🔴 Important</button>
-        <button class="badge-option" onclick="toggleBadge('pink',this)">🌸 Image</button>
-        <button class="badge-option" onclick="toggleBadge('orange',this)">🟠 Dev</button>
-        <button class="badge-option" onclick="toggleBadge('teal',this)">🩵 Open Source</button>
+        <button class="badge-option" onclick="toggleBadge('Production',this)">🟢 Production</button>
+        <button class="badge-option" onclick="toggleBadge('News',this)">🔵 News</button>
+        <button class="badge-option" onclick="toggleBadge('IA',this)">🟣 IA/LLM</button>
+        <button class="badge-option" onclick="toggleBadge('Outil',this)">🟡 Outil</button>
+        <button class="badge-option" onclick="toggleBadge('Important',this)">🔴 Important</button>
+        <button class="badge-option" onclick="toggleBadge('Dev',this)">🟠 Dev</button>
+        <button class="badge-option" onclick="toggleBadge('Réseau',this)">⚪️ Réseau social</button>
       </div>
       <div class="form-btn-row">
         <button class="btn-add" onclick="addTool()">Ajouter</button>
