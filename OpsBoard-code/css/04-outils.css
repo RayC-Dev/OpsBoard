@@ -28,14 +28,13 @@
   cursor: pointer; transition: all .15s;
 }
 .badge-option:hover { border-color: var(--border3); color: var(--text); }
-.badge-option.sel-green  { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,.08); }
-.badge-option.sel-blue   { border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,.08); }
-.badge-option.sel-purple { border-color: #a78bfa; color: #a78bfa; background: rgba(167,139,250,.08); }
-.badge-option.sel-yellow { border-color: #fbbf24; color: #fbbf24; background: rgba(251,191,36,.08); }
-.badge-option.sel-red    { border-color: #f87171; color: #f87171; background: rgba(248,113,113,.08); }
-.badge-option.sel-pink   { border-color: #f472b6; color: #f472b6; background: rgba(244,114,182,.08); }
-.badge-option.sel-orange { border-color: #fb923c; color: #fb923c; background: rgba(251,146,60,.08); }
-.badge-option.sel-teal   { border-color: #34d399; color: #34d399; background: rgba(52,211,153,.08); }
+.badge-option.sel-Production  { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,.08); }
+.badge-option.sel-News   { border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,.08); }
+.badge-option.sel-IA { border-color: #7f00ff; color: #7f00ff; background: rgba(127,0,250,.08); }
+.badge-option.sel-Outil { border-color: #ffff00; color: #ffff00; background: rgba(255,255,0,.08); }
+.badge-option.sel-Important    { border-color: #ff0000; color: #ff0000; background: rgba(248,55,55,.08); }
+.badge-option.sel-Dev { border-color: #ff7f00; color: #ff7f00; background: rgba(255,127,0,.08); }
+.badge-option.sel-Réseau   { border-color: #ffffff; color: #ffffff; background: rgba(255,255,255,.08); }
 .form-btn-row { display: flex; gap: 7px; }
 .btn-add {
   padding: 7px 16px; background: rgba(0,212,106,0.1);
@@ -71,14 +70,13 @@
 .tool-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tool-badges { display: flex; gap: 3px; flex-wrap: wrap; }
 .tool-badge { font-size: 10px; padding: 2px 7px; border-radius: 20px; border: 1px solid; white-space: nowrap; }
-.tb-green  { border-color: rgba(34,197,94,.4);  color: #4ade80; }
-.tb-blue   { border-color: rgba(96,165,250,.4);  color: #60a5fa; }
-.tb-purple { border-color: rgba(167,139,250,.4); color: #c084fc; }
-.tb-yellow { border-color: rgba(251,191,36,.4);  color: #fbbf24; }
-.tb-red    { border-color: rgba(248,113,113,.4); color: #f87171; }
-.tb-pink   { border-color: rgba(244,114,182,.4); color: #f472b6; }
-.tb-orange { border-color: rgba(251,146,60,.4);  color: #fb923c; }
-.tb-teal   { border-color: rgba(52,211,153,.4);  color: #34d399; }
+.tb-Production  { border-color: rgba(34,197,94);  color: #4ade80; }
+.tb-News   { border-color: rgba(96,165,250);  color: #60a5fa; }
+.tb-IA { border-color: rgba(127,0,250); color: #7f00ff; }
+.tb-Outil { border-color: rgba(255,255,0);  color: #ffff00; }
+.tb-Important    { border-color: rgba(255,0,0); color: #ff0000; }
+.tb-Dev { border-color: rgba(255,127,0);  color: #ff7f00; }
+.tb-Réseau   { border-color: rgba(255,255,255);  color: #ffffff; }
 .tool-url { font-size: 11px; color: var(--text3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tool-date { font-size: 11px; color: var(--text3); }
 .tool-del {
